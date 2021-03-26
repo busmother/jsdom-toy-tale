@@ -13,3 +13,58 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
+function fetchToys() {
+  fetch("http://localhost:3000/toys") .then(buildToys = () => {
+    //create toys
+    let div = document.createElement("div")
+    div.className = "card"
+    let h2 = document.createElement("h2")
+    h2.innerText = toy[name]
+    loadImages(imgUrl)
+    let p = document.createElement("p")
+    p.innerText = toy[likes].count
+    let button = document.createElement("button")
+    button.class = "like-btn"
+  });
+  return fetch("http://localhost:3000/toys", /*toys*/)
+}
+
+function loadImages(imgURL) {
+  fetch(imgUrl)
+  .then(res => res.json())
+  .then(results => {
+    results.message.forEach(image=> addImage(image))
+  })
+}
+
+function addImage(toyPicUrl) {
+  let container = document.querySelector('.card');
+  let newImageEl = document.createElement('img');
+  newImageEl.src = toyPicUrl;
+  container.appendChild(newImageEl)
+}
+
+/*
+Fetch Andy's Toys
+On the index.html page, there is a div with the id "toy-collection."
+
+When the page loads, make a 'GET' request to fetch all the toy objects. With the response data, 
+make a <div class="card"> for each toy and add it to the toy-collection div.
+
+Add Toy Info to the Card
+Each card should have the following child elements:
+
+h2 tag with the toy's name
+img tag with the src of the toy's image attribute and the class name "toy-avatar"
+p tag with how many likes that toy has
+button tag with a class "like-btn"
+After all of that, the toy card should resemble:
+
+  <div class="card">
+    <h2>Woody</h2>
+    <img src=toy_image_url class="toy-avatar" />
+    <p>4 Likes </p>
+    <button class="like-btn">Like <3</button>
+  </div> 
+  */
