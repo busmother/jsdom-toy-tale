@@ -87,7 +87,7 @@ likeButton.addEventListener("click", (e) => {
 function addLike () {
   console.log("you're in the addLike function")
   const configurationObject = {
-    method: "POST",
+    method: "PATCH",
     headers: {
       "Content-Type": "application/json",
       "Accept": "application/json"
@@ -107,6 +107,7 @@ function addLike () {
 }
 
 function updateLikes () {
+  console.log("you're in the updateLikes function")
   let likes = document.querySelector(".card p")
   likes.innerText = "more likes than before"
 }
