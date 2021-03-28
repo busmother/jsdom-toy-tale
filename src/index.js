@@ -12,66 +12,101 @@ document.addEventListener("DOMContentLoaded", () => {
       toyFormContainer.style.display = "none";
     }
   });
+  loadToys();
 });
 
-/*
-Fetch Andy's Toys
-On the index.html page, there is a div with the id "toy-collection."
 
-When the page loads, make a 'GET' request to fetch all the toy objects. With the response data, 
-make a <div class="card"> for each toy and add it to the toy-collection div. */
+const form = document.querySelector(".add-toy-form")
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  submitData(document.querySelector(".add-toy-form").name.value, document.querySelector(".add-toy-form").image.value);
+})
 
-function makeDivs(toy) {
-  let div = document.createElement('div')
-  div.class = 'card'
-  document.appendChild(div)
-}
 
-/*
-
-Add Toy Info to the Card
-Each card should have the following child elements:
-
-h2 tag with the toy's name */
-
-function makeNames(toy) {
-  let div = document.createElement('h2')
-  h2.innerText = toy[name]
-  div = document.querySelector('.card')
-  div.appendChild(h2)
-}
-
-/*
-img tag with the src of the toy's image attribute and the class name "toy-avatar" */
-
-function loadImage(toy) {
-  let imgUrl =  toy[image]
-  fetch(imgUrl)
+function loadToys() {
+  fetch("http://localhost:3000/toys")
   .then(res => res.json())
-  .then(results => {
-    results.message.forEach(image=> addImage(image))
+  .then(result => {
+    console.log(result)
+    //iterate over array, then pass each toy to a separately defined function
+    result.map(toy => addToys(toy))
   })
 }
 
-function addImage(toyPicUrl) {
-    let container = document.querySelector('.card');
-    let newImageEl = document.createElement('img');
-    newImageEl.src = toyPicUrl;
-    container.appendChild(newImageEl)
+function addToys(toy) {
+  toyCollection = document.querySelector('#toy-collection')
+  let div = document.createElement('div')
+  div.className = 'card'
+  toyCollection.appendChild(div)
+  let h2 = document.createElement('h2')
+  h2.innerText = toy['name']
+  div.appendChild(h2)
+  let newImageEl = document.createElement('img')
+  newImageEl.src = toy['image']
+  newImageEl.className = 'toy-avatar'
+  div.appendChild(newImageEl)
+  let p = document.createElement('p');
+  div.appendChild(p)
+  p.innerText = `${toy['likes']} Likes`
+  let button = document.createElement('button')
+  button.className = 'like-btn'
+  button.innerText = 'Like <3'
+  div.appendChild(button)
 }
 
-/*
-p tag with how many likes that toy has
+function submitData(name, img) {
+  console.log("you're in the submitData function")
+  const configurationObject = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    },
 
+    body: JSON.stringify({
+      "name": name, // document.querySelector(".add-toy-form").name
+      "image": img, // "https://vignette.wikia.nocookie.net/p__/images/8/88/Jessie_Toy_Story_3.png/revision/latest?cb=20161023024601&path-prefix=protagonist",
+      "likes": 0
+    }) 
+  }
+  return fetch("http://localhost:3000/toys", configurationObject)
+  .then(function(response) {
+      return response.json();
+    })
+    .then(function(json) {
+      addToys(json);
+    })
+}
 
+const likeButton = document.querySelector(".like-btn")
+likeButton.addEventListener("click", (e) => {
+  e.preventDefault();
+  addLike();
+})
 
-button tag with a class "like-btn"
-After all of that, the toy card should resemble:
+function addLike () {
+  console.log("you're in the addLike function")
+  const configurationObject = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    },
 
-  <div class="card">
-    <h2>Woody</h2>
-    <img src=toy_image_url class="toy-avatar" />
-    <p>4 Likes </p>
-    <button class="like-btn">Like <3</button>
-  </div> 
-  */
+    body: JSON.stringify({
+      "likes": 666 // document.querySelector
+    }) 
+  }
+  return fetch("http://localhost:3000/toys", configurationObject)
+  .then(function(response) {
+      return response.json();
+    })
+    .then(function(json) {
+      updateLikes();
+    })
+}
+
+function updateLikes () {
+  let likes = document.querySelector(".card p")
+  likes.innerText = "more likes than before"
+}
